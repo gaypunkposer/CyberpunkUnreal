@@ -13,8 +13,9 @@ AMovementPawn::AMovementPawn()
 	CapsuleCollider->InitCapsuleSize(55.f, 96.0f);
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	CameraComponent->bUsePawnControlRotation = true;
-	CameraComponent->SetRelativeLocation(FVector(0, 0, 192));
+    CameraComponent->SetupAttachment(CapsuleCollider);
+    CameraComponent->bUsePawnControlRotation = true;
+	CameraComponent->SetRelativeLocation(FVector(0, 0, 100));
 
 	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	
@@ -25,8 +26,6 @@ void AMovementPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	RefreshMovementComponents();
-	int first = Abilities.GetData()[0]->GetPriority();
-	UE_LOG(LogTemp, Warning, TEXT("Priority is %d"), first);
 }
 
 void AMovementPawn::RefreshMovementComponents() 
@@ -49,3 +48,11 @@ void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+FMoveState AMovementPawn::GetMoveState(float DeltaTime, FVector GroundNormal)
+{
+    FMoveState output = FMoveState();
+    
+    output.
+    
+    return output;
+}

@@ -12,29 +12,35 @@ class CYBERPUNKUNREAL_API AMovementPawn : public APawn
 {
 	GENERATED_BODY()
 
-	TArray<UMovementAbility*> Abilities;
+    
 
 public:
 	// Sets default values for this pawn's properties
 	AMovementPawn();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision)
-		class UCapsuleComponent* CapsuleCollider;
+    class UCapsuleComponent* CapsuleCollider;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* CameraComponent;
+    class UCameraComponent* CameraComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Mesh)
-		class USkeletalMeshComponent* BodyMesh;
+    class USkeletalMeshComponent* BodyMesh;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
+    FMoveState CurrentMoveState;
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
+    FMoveState PreviousMoveState;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
+    FVector Velocity;
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
+    TArray<UMovementAbility*> Abilities;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	FMoveState CurrentMoveState;
-	FMoveState PreviousMoveState;
-
-	FVector Velocity;
 
 public:	
 	// Called every frame
@@ -44,5 +50,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+    UFUNCTION(BlueprintPure)
+    FMoveState GetMoveState(float DeltaTime, FVector GroundNormal);
 };

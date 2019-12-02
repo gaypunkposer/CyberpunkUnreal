@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CYBERPUNKUNREAL_API USlideAbility : public UMovementAbility
 {
 	GENERATED_BODY()

@@ -9,12 +9,12 @@
 /**
  * 
  */
-UCLASS()
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CYBERPUNKUNREAL_API USprintAbility : public UMovementAbility
 {
 	GENERATED_BODY()
 	
 public:
 	USprintAbility();
-	virtual bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
+    bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
 };
