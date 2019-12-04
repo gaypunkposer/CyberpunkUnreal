@@ -2,7 +2,6 @@
 
 #include "CyberpunkUnrealGameMode.h"
 #include "CyberpunkUnrealHUD.h"
-#include "CyberpunkUnrealCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 ACyberpunkUnrealGameMode::ACyberpunkUnrealGameMode()

@@ -2,6 +2,9 @@
 
 
 #include "MovementPawn.h"
+#include "Classes/Components/CapsuleComponent.h"
+#include "Camera/CameraComponent.h"
+#include "CyberpunkUnreal/Movement/AdvancedPawnMovement.h"
 
 // Sets default values
 AMovementPawn::AMovementPawn()
@@ -17,6 +20,9 @@ AMovementPawn::AMovementPawn()
     CameraComponent->bUsePawnControlRotation = true;
 	CameraComponent->SetRelativeLocation(FVector(0, 0, 100));
 
+	MovementComponent = CreateDefaultSubobject<UAdvancedPawnMovement>(TEXT("PawnMovement"));
+	MovementComponent->UpdatedComponent = RootComponent;
+
 	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	
 }
@@ -25,14 +31,8 @@ AMovementPawn::AMovementPawn()
 void AMovementPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	RefreshMovementComponents();
 }
 
-void AMovementPawn::RefreshMovementComponents() 
-{
-	GetComponents<UMovementAbility>(Abilities);
-	Abilities.Sort();
-}
 
 // Called every frame
 void AMovementPawn::Tick(float DeltaTime)
@@ -41,18 +41,47 @@ void AMovementPawn::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
 void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMovementPawn::OnBeginJump);
+	PlayerInputComponent->BindAction("Jump", IE_Repeat, this, &AMovementPawn::OnEndJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMovementPawn::OnEndJump);
+
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AMovementPawn::OnBeginCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMovementPawn::OnEndCrouch);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMovementPawn::OnBeginSprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AMovementPawn::OnEndSprint);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMovementPawn::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMovementPawn::MoveRight);
+	PlayerInputComponent->BindAxis("Turn", this, &AMovementPawn::Turn);
 }
 
-FMoveState AMovementPawn::GetMoveState(float DeltaTime, FVector GroundNormal)
+UAdvancedPawnMovement* AMovementPawn::GetAdvancedMovementComponent()
 {
-    FMoveState output = FMoveState();
-    
-    output.
-    
-    return output;
+	return MovementComponent;
+}
+
+void AMovementPawn::MoveForward(float Degree)
+{
+	if (MovementComponent && MovementComponent->UpdatedComponent == RootComponent)
+	{
+		MovementComponent->AddInputVector(GetActorForwardVector() * Degree);
+	}
+}
+
+void AMovementPawn::MoveRight(float Degree)
+{
+	if (MovementComponent && MovementComponent->UpdatedComponent == RootComponent)
+	{
+		MovementComponent->AddInputVector(GetActorRightVector() * Degree);
+	}
+}
+
+void AMovementPawn::Turn(float Degree) 
+{
+
 }

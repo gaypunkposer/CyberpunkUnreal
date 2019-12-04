@@ -17,9 +17,8 @@ bool UMovementAbility::ShouldUseThisAbility(FMoveState current, FMoveState previ
 FVector UMovementAbility::GetVelocity(FMoveState current, FMoveState previous)
 {
 	FVector dir = current.DirectionalInput;
-	FVector vel = FVector();
-	vel += GetOwner()->GetActorForwardVector() * dir.X * Speed;
-	vel += GetOwner()->GetActorRightVector() * dir.Y * Speed;
+	FVector vel = -current.Velocity;
+	vel += dir * Speed;
 	vel -= GetOwner()->GetActorUpVector() * Stickiness;
 
 	return vel;

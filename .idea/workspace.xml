@@ -7,13 +7,13 @@
       <config projectName="UE4" targetName="CyberpunkUnrealEditor-Win64-DebugGame" />
       <config projectName="UE4" targetName="CyberpunkUnrealEditor" />
       <config projectName="UE4" targetName="UE4Editor" />
-      <config projectName="UE4" targetName="UE4Game-Win64-DebugGame" />
       <config projectName="UE4" targetName="UE4Game-Win64-Shipping" />
+      <config projectName="UE4" targetName="UE4Game-Win64-DebugGame" />
       <config projectName="UE4" targetName="UE4Editor-Win64-Shipping" />
       <config projectName="UE4" targetName="UE4Editor-Win64-DebugGame" />
       <config projectName="UE4" targetName="CyberpunkUnreal-Win64-DebugGame" />
-      <config projectName="UE4" targetName="CyberpunkUnreal-Win64-Shipping" />
       <config projectName="UE4" targetName="CyberpunkUnrealEditor-Win64-Shipping" />
+      <config projectName="UE4" targetName="CyberpunkUnreal-Win64-Shipping" />
       <config projectName="UE4" targetName="CyberpunkUnreal" />
     </generated>
   </component>
@@ -23,7 +23,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8afb5eb4-bb79-40f2-a7d7-e3b3f12e4486" name="Default Changelist" comment="" />
+    <list default="true" id="8afb5eb4-bb79-40f2-a7d7-e3b3f12e4486" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +36,11 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1UAl8jBOt7hxzjqINuZ3X5hbc0x" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -145,7 +151,19 @@
       <updated>1574807123688</updated>
       <workItem from="1574807127415" duration="23000" />
       <workItem from="1574807164766" duration="1190000" />
+      <workItem from="1575424546720" duration="856000" />
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

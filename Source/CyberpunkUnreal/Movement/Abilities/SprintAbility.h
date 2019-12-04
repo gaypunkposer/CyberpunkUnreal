@@ -16,5 +16,5 @@ class CYBERPUNKUNREAL_API USprintAbility : public UMovementAbility
 	
 public:
 	USprintAbility();
-    bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
+    virtual bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
 };

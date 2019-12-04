@@ -2,9 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-#include "MovementAbility.h"
+#include "MovementBase.h"
 #include "MovementPawn.generated.h"
 
 UCLASS()
@@ -12,7 +10,18 @@ class CYBERPUNKUNREAL_API AMovementPawn : public APawn
 {
 	GENERATED_BODY()
 
-    
+	inline void OnBeginJump() { JumpPressed = true; };
+	inline void OnEndJump() { JumpPressed = false; };
+
+	inline void OnBeginCrouch() { CrouchPressed = true; };
+	inline void OnEndCrouch() { CrouchPressed = false; };
+
+	inline void OnBeginSprint() { SprintPressed = true; };
+	inline void OnEndSprint() { SprintPressed = false; };
+
+	void MoveForward(float Degree);
+	void MoveRight(float Degree);
+	void Turn(float Degree);
 
 public:
 	// Sets default values for this pawn's properties
@@ -27,29 +36,26 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Mesh)
     class USkeletalMeshComponent* BodyMesh;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-    FMoveState CurrentMoveState;
-    
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-    FMoveState PreviousMoveState;
+	class UAdvancedPawnMovement* MovementComponent;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-    FVector Velocity;
-    
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-    TArray<UMovementAbility*> Abilities;
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UInputComponent* Input;
+	bool CrouchPressed;
+	bool JumpPressed;
+	bool SprintPressed;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void RefreshMovementComponents();
-
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-    UFUNCTION(BlueprintPure)
-    FMoveState GetMoveState(float DeltaTime, FVector GroundNormal);
+
+	UAdvancedPawnMovement* GetAdvancedMovementComponent();
+
+	inline bool GetCrouchPressed() { return CrouchPressed; };
+	inline bool GetJumpPressed() { return JumpPressed; };
+	inline bool GetSprintPressed() { return SprintPressed; };
 };

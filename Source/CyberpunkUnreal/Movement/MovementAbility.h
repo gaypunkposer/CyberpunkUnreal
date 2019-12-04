@@ -5,44 +5,9 @@
 #include "Engine.h"
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "MovementBase.h"
+
 #include "MovementAbility.generated.h"
-
-USTRUCT(BlueprintType)
-struct CYBERPUNKUNREAL_API FMoveState
-{
-    GENERATED_BODY()
-    
-    UPROPERTY(BlueprintReadOnly)
-    float DeltaTime;
-    
-    UPROPERTY(BlueprintReadOnly)
-    bool CrouchSlide;
-    
-    UPROPERTY(BlueprintReadOnly)
-    bool Sprint;
-    
-    UPROPERTY(BlueprintReadOnly)
-    bool Jump;
-    
-    UPROPERTY(BlueprintReadOnly)
-    bool Grounded;
-    
-    UPROPERTY(BlueprintReadOnly)
-    FVector DirectionalInput;
-    
-    UPROPERTY(BlueprintReadOnly)
-    FVector Velocity;
-    
-    UPROPERTY(BlueprintReadOnly)
-    FVector LateralVelocity;
-    
-    UPROPERTY(BlueprintReadOnly)
-    FVector GroundNormal;
-    
-    UPROPERTY(BlueprintReadOnly)
-    UMovementAbility* Ability;
-};
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CYBERPUNKUNREAL_API UMovementAbility : public UActorComponent

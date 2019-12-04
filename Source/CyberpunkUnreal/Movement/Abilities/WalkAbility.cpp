@@ -11,5 +11,3 @@ bool UWalkAbility::ShouldUseThisAbility(FMoveState current, FMoveState previous)
 {
 	return current.Grounded;
 }
-
-

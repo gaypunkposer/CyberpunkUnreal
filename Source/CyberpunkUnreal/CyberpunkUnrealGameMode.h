@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/Pawn.h"
+
 #include "CyberpunkUnrealGameMode.generated.h"
 
 UCLASS(minimalapi)
