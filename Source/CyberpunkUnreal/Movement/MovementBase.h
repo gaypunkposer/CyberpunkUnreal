@@ -8,6 +8,14 @@
 
 class UAdvancedPawnMovement;
 class UMovementAbility;
+class UAirAbility;
+class USlideAbility;
+class USprintAbility;
+class UWalkAbility;
+class UWallrunAbility;
+class UJumpAbility;
+class ULedgeGrabAbility;
+
 class AMovementPawn;
 
 USTRUCT(BlueprintType)

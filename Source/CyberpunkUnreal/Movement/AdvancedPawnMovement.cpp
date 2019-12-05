@@ -5,18 +5,18 @@
 #include "Movement/MovementPawn.h"
 #include "Movement/MovementAbility.h"
 
-UAdvancedPawnMovement::UAdvancedPawnMovement() 
+UAdvancedPawnMovement::UAdvancedPawnMovement()
 {
-	
+	GroundCheckShape = FCollisionShape::MakeCapsule(55.f, 96.f);
 }
 
-void UAdvancedPawnMovement::BeginPlay() 
+void UAdvancedPawnMovement::BeginPlay()
 {
 	Super::BeginPlay();
 	RefreshComponents();
 }
 
-void UAdvancedPawnMovement::RefreshComponents() 
+void UAdvancedPawnMovement::RefreshComponents()
 {
 	GetOwner()->GetComponents<UMovementAbility>(Abilities);
 	Abilities.Sort();
@@ -26,7 +26,7 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!PawnOwner || !UpdatedComponent || ShouldSkipUpdate(DeltaTime)) 
+	if (!PawnOwner || !UpdatedComponent || ShouldSkipUpdate(DeltaTime))
 	{
 		return;
 	}
@@ -34,37 +34,39 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 	PreviousMoveState = CurrentMoveState;
 	CurrentMoveState = UpdateMoveState(DeltaTime);
 	UMovementAbility* ability = nullptr;
-	UE_LOG(LogTemp, Warning, TEXT("%d abilities"), Abilities.Num());
 
-	for (UMovementAbility* poss : Abilities) 
+	for (UMovementAbility* poss : Abilities)
 	{
-		if (poss->ShouldUseThisAbility(CurrentMoveState, PreviousMoveState)) 
+		if (poss->ShouldUseThisAbility(CurrentMoveState, PreviousMoveState))
 		{
 			ability = poss;
 			break;
 		}
 	}
 
-	if (ability == nullptr) 
+	if (ability == nullptr)
 	{
-		//UE_LOG(LogTemp, Error, TEXT("Failed to acquire appropriate move state"));
 		return;
 	}
 
 	CurrentMoveState.Ability = ability;
+	UE_LOG(LogTemp, Warning, TEXT("Is grounded: %d"), CurrentMoveState.Grounded);
 
-	FVector desiredVelocity = ability->GetVelocity(CurrentMoveState, PreviousMoveState);
+	DrawDebugCapsule(GetWorld(), GetActorLocation(), GroundCheckShape.GetCapsuleHalfHeight(), GroundCheckShape.GetCapsuleRadius(), GetOwner()->GetActorQuat(), FColor::Purple, false, 1.f);
+	Velocity += ability->GetVelocity(CurrentMoveState, PreviousMoveState);
 
-	if (!desiredVelocity.IsNearlyZero()) 
+	if (!Velocity.IsNearlyZero())
 	{
 		FHitResult hit;
-		SafeMoveUpdatedComponent(desiredVelocity * DeltaTime, UpdatedComponent->GetComponentRotation(), true, hit);
+		SafeMoveUpdatedComponent(Velocity * DeltaTime, UpdatedComponent->GetComponentRotation(), true, hit);
 
 		if (hit.IsValidBlockingHit())
 		{
-			SlideAlongSurface(desiredVelocity * DeltaTime, 1.f - hit.Time, hit.Normal, hit);
+			SlideAlongSurface(Velocity * DeltaTime, 1.f - hit.Time, hit.Normal, hit);
 		}
 	}
+
+	UpdateComponentVelocity();
 }
 
 FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
@@ -76,16 +78,20 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 	AMovementPawn* parent = Cast<AMovementPawn>(GetOwner());
 
 	state.CrouchSlide = parent->GetCrouchPressed();
-	state.Jump = parent->GetJumpPressed();
+	state.Jump = parent->ConsumeJump();
 	state.Sprint = parent->GetSprintPressed();
 	state.DirectionalInput = ConsumeInputVector().GetClampedToMaxSize(1.0f);
-	
+
 	state.Velocity = Velocity;
 	state.LateralVelocity = FVector(Velocity.X, Velocity.Y, 0);
 
-	//TODO: Do ground check
-	state.Grounded = true;
-	state.GroundNormal = FVector::UpVector;
+	FHitResult outHit;
+	FCollisionQueryParams collParam = FCollisionQueryParams();
+	collParam.AddIgnoredActor(GetOwner());
+	state.Grounded = GetWorld()->SweepSingleByChannel(outHit, GetOwner()->GetActorLocation(),
+		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector() * 5.f,
+		GetOwner()->GetActorQuat(), ECollisionChannel::ECC_WorldStatic, GroundCheckShape, collParam);
+	state.GroundNormal = outHit.Normal;
 
 	return state;
 }

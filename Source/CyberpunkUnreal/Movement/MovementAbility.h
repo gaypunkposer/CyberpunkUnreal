@@ -20,7 +20,7 @@ public:
     
     inline friend bool operator< (const UMovementAbility& lhs, const UMovementAbility& rhs) { return lhs.Priority > rhs.Priority; }
     
-protected:
+public:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     int Priority = -1;

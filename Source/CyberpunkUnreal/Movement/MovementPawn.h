@@ -22,6 +22,7 @@ class CYBERPUNKUNREAL_API AMovementPawn : public APawn
 	void MoveForward(float Degree);
 	void MoveRight(float Degree);
 	void Turn(float Degree);
+	void LookUp(float Degree);
 
 public:
 	// Sets default values for this pawn's properties
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Mesh)
     class USkeletalMeshComponent* BodyMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	int TurnRate = 25;
 
 	class UAdvancedPawnMovement* MovementComponent;
 
@@ -56,6 +60,6 @@ public:
 	UAdvancedPawnMovement* GetAdvancedMovementComponent();
 
 	inline bool GetCrouchPressed() { return CrouchPressed; };
-	inline bool GetJumpPressed() { return JumpPressed; };
+	bool ConsumeJump();
 	inline bool GetSprintPressed() { return SprintPressed; };
 };

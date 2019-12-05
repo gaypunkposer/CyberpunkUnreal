@@ -33,7 +33,7 @@ bool USlideAbility::ShouldUseThisAbility(FMoveState current, FMoveState previous
 
 FVector USlideAbility::GetVelocity(FMoveState current, FMoveState previous)
 {
-	FVector targetVelocity = HorizontalSpeed * current.DirectionalInput.Y * GetOwner()->GetActorRightVector();
+	FVector targetVelocity = HorizontalSpeed * FVector(0, current.DirectionalInput.Y, 0);
 
 	if (!PreviouslySliding && BoostTime <= 0)
 	{

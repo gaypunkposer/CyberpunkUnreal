@@ -12,6 +12,7 @@ class CYBERPUNKUNREAL_API UAdvancedPawnMovement : public UPawnMovementComponent
 {
 	GENERATED_BODY()
 
+	FCollisionShape GroundCheckShape;
 public:
 	UAdvancedPawnMovement();
 

@@ -3,12 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Movement/MovementBase.h"
 #include "Movement/MovementAbility.h"
 #include "SlideAbility.generated.h"
 
-/**
- * 
- */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CYBERPUNKUNREAL_API USlideAbility : public UMovementAbility
 {

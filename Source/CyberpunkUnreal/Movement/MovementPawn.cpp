@@ -24,7 +24,6 @@ AMovementPawn::AMovementPawn()
 	MovementComponent->UpdatedComponent = RootComponent;
 
 	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +57,7 @@ void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMovementPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMovementPawn::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AMovementPawn::Turn);
+	PlayerInputComponent->BindAxis("LookUp", this, &AMovementPawn::LookUp);
 }
 
 UAdvancedPawnMovement* AMovementPawn::GetAdvancedMovementComponent()
@@ -83,5 +83,17 @@ void AMovementPawn::MoveRight(float Degree)
 
 void AMovementPawn::Turn(float Degree) 
 {
+	AddControllerYawInput(Degree * TurnRate * GetWorld()->GetDeltaSeconds());
+}
 
+void AMovementPawn::LookUp(float Degree)
+{
+	AddControllerPitchInput(Degree * TurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+bool AMovementPawn::ConsumeJump()
+{
+	bool retval = JumpPressed;
+	JumpPressed = false;
+	return retval;
 }
