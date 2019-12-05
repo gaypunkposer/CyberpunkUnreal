@@ -19,7 +19,7 @@ class CYBERPUNKUNREAL_API UWallrunAbility : public UMovementAbility
 	FVector WallNormal;
 
 	bool PreCheck(FMoveState current);
-	bool MainCheck(FMoveState current);
+	bool MainCheck(FMoveState current, FMoveState previous);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)

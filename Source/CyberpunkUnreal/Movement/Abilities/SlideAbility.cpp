@@ -38,7 +38,7 @@ FVector USlideAbility::GetVelocity(FMoveState current, FMoveState previous)
 	if (!PreviouslySliding && BoostTime <= 0)
 	{
 		FVector addVelocity = FVector::VectorPlaneProject(current.Velocity, current.GroundNormal);
-		addVelocity.Z -= current.Velocity.Z;
+		//addVelocity.Z = -current.Velocity.Z;
 		addVelocity *= Speed;
 		addVelocity += targetVelocity;
 
@@ -49,10 +49,10 @@ FVector USlideAbility::GetVelocity(FMoveState current, FMoveState previous)
 
 	float zDiff = PreviousZ - GetOwner()->GetActorTransform().GetLocation().Z;
 
-	targetVelocity -= current.Velocity * Friction * current.DeltaTime;
+	targetVelocity -= current.LateralVelocity * Friction * current.DeltaTime;
 	targetVelocity.Z = -current.Velocity.Z;
 	targetVelocity.Z -= Stickiness;
-	targetVelocity += current.Velocity.GetSafeNormal() * ZBoost * zDiff;
+	targetVelocity += current.LateralVelocity.GetSafeNormal() * ZBoost * zDiff;
 
 	PreviouslySliding = true;
 	return targetVelocity;

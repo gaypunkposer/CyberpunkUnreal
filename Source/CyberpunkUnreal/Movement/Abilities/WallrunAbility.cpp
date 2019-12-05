@@ -2,6 +2,7 @@
 
 
 #include "WallrunAbility.h"
+#include "LedgeGrabAbility.h"
 
 UWallrunAbility::UWallrunAbility() 
 {
@@ -18,11 +19,12 @@ bool UWallrunAbility::ShouldUseThisAbility(FMoveState current, FMoveState previo
 
 	if (!PreCheck(current)) return false;
 
-	if (MainCheck(current) && (previous.Ability->IsA<UWallrunAbility>() ||
+	if (MainCheck(current, previous) && ((previous.Ability != nullptr && previous.Ability->IsA<UWallrunAbility>()) ||
 		current.Velocity.Size() > MinEnterVelocity))
 	{
 		Leave = false;
-		return false;// !previous.Ability->IsA<ULedgeGrabAbility>();
+		
+		return !previous.Ability->IsA<ULedgeGrabAbility>();
 	}
 
 	if (Leave || current.Jump) return false;
@@ -36,17 +38,33 @@ bool UWallrunAbility::PreCheck(FMoveState current)
 	return !(current.CrouchSlide || current.Grounded);
 }
 
-bool UWallrunAbility::MainCheck(FMoveState current)
+bool UWallrunAbility::MainCheck(FMoveState current, FMoveState previous)
 {
-	//Write this function
-	return false;
+	FHitResult result;
+	FCollisionQueryParams collParam = FCollisionQueryParams();
+	collParam.AddIgnoredActor(GetOwner());
+	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 33.f, FColor::Green, false, .1f);
+	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 33.f, FColor::Red, false, .1f);
+	if (GetWorld()->LineTraceSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 57.5f, ECC_WorldStatic, collParam)
+		|| GetWorld()->LineTraceSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 57.5f, ECC_WorldStatic, collParam))
+	{
+		WallNormal = result.Normal;
+		UE_LOG(LogTemp, Warning, TEXT("Wallrun check succeeded, %s"), *result.Actor->GetName());
+		return true;
+	}
+	else 
+	{
+			WallNormal = FVector::ZeroVector;
+
+		return false;
+	}
 }
 
 FVector UWallrunAbility::GetVelocity(FMoveState current, FMoveState previous)
 {
 	float negateStickDeg = FVector::DotProduct(current.Velocity, -WallNormal);
 
-	FVector targetVelocity = FVector(current.DirectionalInput.X, 0, 0) * Speed;
+	FVector targetVelocity = current.LateralVelocity * Speed;
 	targetVelocity.Z = -current.Velocity.Z;
 
 	if (current.Jump)

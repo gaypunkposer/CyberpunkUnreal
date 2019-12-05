@@ -14,6 +14,7 @@ void UAdvancedPawnMovement::BeginPlay()
 {
 	Super::BeginPlay();
 	RefreshComponents();
+	PreviousMoveState = UpdateMoveState(0.f);
 }
 
 void UAdvancedPawnMovement::RefreshComponents()
@@ -50,7 +51,6 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 	}
 
 	CurrentMoveState.Ability = ability;
-	UE_LOG(LogTemp, Warning, TEXT("Is grounded: %d"), CurrentMoveState.Grounded);
 
 	DrawDebugCapsule(GetWorld(), GetActorLocation(), GroundCheckShape.GetCapsuleHalfHeight(), GroundCheckShape.GetCapsuleRadius(), GetOwner()->GetActorQuat(), FColor::Purple, false, 1.f);
 	Velocity += ability->GetVelocity(CurrentMoveState, PreviousMoveState);
@@ -89,7 +89,7 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
 	state.Grounded = GetWorld()->SweepSingleByChannel(outHit, GetOwner()->GetActorLocation(),
-		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector() * 5.f,
+		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector(),
 		GetOwner()->GetActorQuat(), ECollisionChannel::ECC_WorldStatic, GroundCheckShape, collParam);
 	state.GroundNormal = outHit.Normal;
 
