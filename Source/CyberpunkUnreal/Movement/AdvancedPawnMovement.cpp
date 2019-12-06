@@ -52,7 +52,7 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 
 	CurrentMoveState.Ability = ability;
 
-	DrawDebugCapsule(GetWorld(), GetActorLocation(), GroundCheckShape.GetCapsuleHalfHeight(), GroundCheckShape.GetCapsuleRadius(), GetOwner()->GetActorQuat(), FColor::Purple, false, 1.f);
+	//DrawDebugCapsule(GetWorld(), GetActorLocation(), GroundCheckShape.GetCapsuleHalfHeight(), GroundCheckShape.GetCapsuleRadius(), GetOwner()->GetActorQuat(), FColor::Purple, false, 1.f);
 	Velocity += ability->GetVelocity(CurrentMoveState, PreviousMoveState);
 
 	if (!Velocity.IsNearlyZero())

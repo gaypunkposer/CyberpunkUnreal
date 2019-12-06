@@ -4,6 +4,7 @@
 #include "MovementPawn.h"
 #include "Classes/Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "CyberpunkUnreal/Movement/AdvancedPawnMovement.h"
 
 // Sets default values
@@ -15,15 +16,16 @@ AMovementPawn::AMovementPawn()
 	CapsuleCollider = CreateDefaultSubobject<UCapsuleComponent>(TEXT("FirstPersonCollision"));
 	CapsuleCollider->InitCapsuleSize(55.f, 96.0f);
 
+	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	BodyMesh->SetupAttachment(CapsuleCollider);
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-    CameraComponent->SetupAttachment(CapsuleCollider);
     CameraComponent->bUsePawnControlRotation = true;
-	CameraComponent->SetRelativeLocation(FVector(0, 0, 100));
+	CameraComponent->SetupAttachment(BodyMesh, TEXT("face"));
 
 	MovementComponent = CreateDefaultSubobject<UAdvancedPawnMovement>(TEXT("PawnMovement"));
 	MovementComponent->UpdatedComponent = RootComponent;
-
-	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	
 }
 
 // Called when the game starts or when spawned

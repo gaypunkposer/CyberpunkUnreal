@@ -4,7 +4,7 @@
 
 UWalkAbility::UWalkAbility()
 {
-	Priority = 1;
+	Priority = 2;
 }
 
 bool UWalkAbility::ShouldUseThisAbility(FMoveState current, FMoveState previous) 

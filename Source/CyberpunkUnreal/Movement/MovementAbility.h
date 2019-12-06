@@ -36,7 +36,9 @@ public:
     
     
 public:	
+	UFUNCTION(BlueprintPure)
     inline int GetPriority() { return Priority; }
+
     virtual bool ShouldUseThisAbility(FMoveState current, FMoveState previous);
     virtual FVector GetVelocity(FMoveState current, FMoveState previous);
     virtual FVector GetCameraPosition(FMoveState current);

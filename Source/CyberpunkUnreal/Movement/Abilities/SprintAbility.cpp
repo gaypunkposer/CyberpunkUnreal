@@ -4,7 +4,7 @@
 
 USprintAbility::USprintAbility()
 {
-	Priority = 2;
+	Priority = 3;
 }
 
 bool USprintAbility::ShouldUseThisAbility(FMoveState current, FMoveState previous) 
