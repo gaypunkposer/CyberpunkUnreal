@@ -7,7 +7,7 @@
 
 #include "AdvancedPawnMovement.generated.h"
 
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class CYBERPUNKUNREAL_API UAdvancedPawnMovement : public UPawnMovementComponent
 {
 	GENERATED_BODY()

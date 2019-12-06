@@ -20,28 +20,32 @@ bool ULedgeGrabAbility::ShouldUseThisAbility(FMoveState current, FMoveState prev
 
 	if (PullingUp)
 	{
-		if (!FrontCheck(current, GetOwner()->GetActorForwardVector()))
+		if (!FrontCheck())
 		{
 			TopOfWall = true;
 			PullingUp = false;
 		}
 
-		else if (false /*Do check*/)
+		else if (!TopCheck())
 		{
-
+			PullingUp = false;
+			return false;
 		}
 
-		return current.Jump;
+		return true;
 	}
 
-	if ((previous.Ability->IsA<UJumpAbility>() || previous.Ability->IsA<UAirAbility>()) && MainCheck(current))
+	if ((previous.Ability->IsA<UJumpAbility>() || previous.Ability->IsA<UAirAbility>()) && MainCheck())
 	{
-		PullingUp = true;
-		TopOfWall = false;
-		return current.Jump;
+		if (current.Jump) {
+			PullingUp = true;
+			return true;
+		}
 	}
 
 	LedgeNormal = FVector::ZeroVector;
+	PullingUp = false;
+	TopOfWall = false;
 	return false;
 }
 
@@ -49,7 +53,7 @@ FVector ULedgeGrabAbility::GetVelocity(FMoveState current, FMoveState previous)
 {
 	if (!PullingUp) 
 	{
-		return LedgeNormal * Speed + FVector::UpVector;
+		return LedgeNormal * Speed + FVector::UpVector * 250.f;
 	}
 
 	FVector targetVelocity = -current.Velocity;
@@ -59,7 +63,7 @@ FVector ULedgeGrabAbility::GetVelocity(FMoveState current, FMoveState previous)
 		FVector right = FVector::CrossProduct(FVector::UpVector, LedgeNormal);
 		targetVelocity += right * current.DirectionalInput.Y * ShiftSpeed * FVector::DotProduct(right, GetOwner()->GetActorRightVector());
 	}
-	else
+	else	
 	{
 		targetVelocity += FVector::UpVector * PullUpSpeed;
 	}
@@ -67,17 +71,36 @@ FVector ULedgeGrabAbility::GetVelocity(FMoveState current, FMoveState previous)
 	return targetVelocity;
 }
 
-bool ULedgeGrabAbility::FrontCheck(FMoveState current, FVector direction) 
+bool ULedgeGrabAbility::FrontCheck() 
 {
-	return false;
+	FHitResult hitResult;
+	FCollisionQueryParams params = FCollisionQueryParams();
+	params.AddIgnoredActor(GetOwner());
+
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(25.f, 50.f, 25.f));
+
+	bool result = GetWorld()->SweepSingleByChannel(hitResult,
+		GetOwner()->GetActorLocation() + FVector::UpVector * 25.f,
+		GetOwner()->GetActorLocation() + FVector::UpVector * 25.f + GetOwner()->GetActorForwardVector() * 33.f,
+		GetOwner()->GetActorQuat(), ECC_WorldStatic, shape, params);
+	//            bool result = Physics.BoxCast(transform.position + Vector3.up * 0.25f, new Vector3(0.25f, 0.5f, 0.25f), direction, out info, Quaternion.identity, 0.33f, 1);
+	LedgeNormal = hitResult.Normal;
+	return result && GetOwner()->GetActorForwardVector().CosineAngle2D(-hitResult.Normal) < 45.f;
 }
 
-bool ULedgeGrabAbility::TopCheck(FMoveState current)
+bool ULedgeGrabAbility::TopCheck()
 {
-	return false;
+	FHitResult result;
+	FCollisionQueryParams params = FCollisionQueryParams();
+	params.AddIgnoredActor(GetOwner());
+
+	return !GetWorld()->LineTraceSingleByChannel(result,
+		GetOwner()->GetActorLocation() + FVector::UpVector * GrabHeight,
+		GetOwner()->GetActorLocation() + FVector::UpVector * GrabHeight + GetOwner()->GetActorForwardVector() * 150.f,
+		ECC_WorldStatic, params);
 }
 
-bool ULedgeGrabAbility::MainCheck(FMoveState current)
+bool ULedgeGrabAbility::MainCheck()
 {
-	return FrontCheck(current, GetOwner()->GetActorForwardVector()) && TopCheck(current);
+	return FrontCheck() && TopCheck();
 }

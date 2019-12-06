@@ -37,7 +37,7 @@ void AMovementPawn::BeginPlay()
 void AMovementPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	CapsuleCollider->SetPhysicsLinearVelocity(MovementComponent->Velocity);
 }
 
 void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

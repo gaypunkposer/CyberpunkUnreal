@@ -43,8 +43,8 @@ bool UWallrunAbility::MainCheck(FMoveState current, FMoveState previous)
 	FHitResult result;
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
-	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 33.f, FColor::Green, false, .1f);
-	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 33.f, FColor::Red, false, .1f);
+	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 60.f, FColor::Green, false, .1f);
+	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 60.f, FColor::Red, false, .1f);
 	if (GetWorld()->LineTraceSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 57.5f, ECC_WorldStatic, collParam)
 		|| GetWorld()->LineTraceSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 57.5f, ECC_WorldStatic, collParam))
 	{
@@ -65,7 +65,6 @@ FVector UWallrunAbility::GetVelocity(FMoveState current, FMoveState previous)
 	float negateStickDeg = FVector::DotProduct(current.Velocity, -WallNormal);
 
 	FVector targetVelocity = current.LateralVelocity * Speed;
-	targetVelocity.Z = -current.Velocity.Z;
 
 	if (current.Jump)
 	{

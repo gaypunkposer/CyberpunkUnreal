@@ -40,6 +40,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int TurnRate = 25;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAdvancedPawnMovement* MovementComponent;
 
 protected:

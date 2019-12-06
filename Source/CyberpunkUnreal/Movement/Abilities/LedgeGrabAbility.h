@@ -17,9 +17,9 @@ class CYBERPUNKUNREAL_API ULedgeGrabAbility : public UMovementAbility
 	bool TopOfWall;
 	bool PreviouslyJumping;
 
-	bool FrontCheck(FMoveState current, FVector direction);
-	bool TopCheck(FMoveState current);
-	bool MainCheck(FMoveState current);
+	bool FrontCheck();
+	bool TopCheck();
+	bool MainCheck();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)

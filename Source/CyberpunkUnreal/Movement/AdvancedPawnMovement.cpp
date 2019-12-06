@@ -67,6 +67,7 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 	}
 
 	UpdateComponentVelocity();
+
 }
 
 FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
@@ -89,7 +90,7 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
 	state.Grounded = GetWorld()->SweepSingleByChannel(outHit, GetOwner()->GetActorLocation(),
-		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector(),
+		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector() * 5.f,
 		GetOwner()->GetActorQuat(), ECollisionChannel::ECC_WorldStatic, GroundCheckShape, collParam);
 	state.GroundNormal = outHit.Normal;
 
