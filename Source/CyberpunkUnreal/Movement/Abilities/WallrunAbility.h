@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Movement/MovementAbility.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "WallrunAbility.generated.h"
 
@@ -47,4 +48,6 @@ public:
 	UWallrunAbility();
 	bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
 	FVector GetVelocity(FMoveState current, FMoveState previous) override;
+	float GetCameraTilt() override;
+	float GetCameraLook() override;
 };

@@ -9,7 +9,7 @@
 
 #include "MovementAbility.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class CYBERPUNKUNREAL_API UMovementAbility : public UActorComponent
 {
     GENERATED_BODY()
@@ -41,15 +41,16 @@ public:
 
     virtual bool ShouldUseThisAbility(FMoveState current, FMoveState previous);
     virtual FVector GetVelocity(FMoveState current, FMoveState previous);
+	virtual void UpdateCollider(UCapsuleComponent* Capsule);
     virtual FVector GetCameraPosition(FMoveState current);
-    virtual float GetCameraTilt(FMoveState current);
-    virtual float GetCameraLook(FMoveState current);
+    virtual float GetCameraTilt();
+    virtual float GetCameraLook();
     virtual USoundBase* UpdateAudio();
     
     /*
      * Need to determine the return type of these
      *
-     * virtual void UpdateCollider();
+     * 
      * virtual void UpdateViewmodel();
      */
     

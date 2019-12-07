@@ -40,7 +40,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Mesh)
     class USkeletalMeshComponent* BodyMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int TurnRate = 25;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)

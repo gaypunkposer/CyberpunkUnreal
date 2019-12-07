@@ -34,5 +34,6 @@ protected:
 public:	
 	USlideAbility();
 	bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
+	void UpdateCollider(UCapsuleComponent* Capsule) override;
 	FVector GetVelocity(FMoveState current, FMoveState previous) override;
 };

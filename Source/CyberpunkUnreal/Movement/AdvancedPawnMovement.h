@@ -13,17 +13,23 @@ class CYBERPUNKUNREAL_API UAdvancedPawnMovement : public UPawnMovementComponent
 	GENERATED_BODY()
 
 	FCollisionShape GroundCheckShape;
+	UCapsuleComponent* PlayerCapsule;
+
+	void UpdateCamera(UMovementAbility* Ability, float DeltaTime);
 public:
 	UAdvancedPawnMovement();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-		FMoveState CurrentMoveState;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float CameraRotTime;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-		FMoveState PreviousMoveState;
+	FMoveState CurrentMoveState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
-		TArray<UMovementAbility*> Abilities;
+	FMoveState PreviousMoveState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)
+	TArray<UMovementAbility*> Abilities;
 
 public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

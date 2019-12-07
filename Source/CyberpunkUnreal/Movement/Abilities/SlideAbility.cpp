@@ -57,3 +57,8 @@ FVector USlideAbility::GetVelocity(FMoveState current, FMoveState previous)
 	PreviouslySliding = true;
 	return targetVelocity;
 }
+
+void USlideAbility::UpdateCollider(UCapsuleComponent* Capsule)
+{
+	Capsule->SetCapsuleHalfHeight(48.f);
+}

@@ -24,19 +24,24 @@ FVector UMovementAbility::GetVelocity(FMoveState current, FMoveState previous)
 	return vel;
 }
 
+void UMovementAbility::UpdateCollider(UCapsuleComponent* Capsule) 
+{
+	Capsule->SetCapsuleHalfHeight(96.f);
+}
+
 FVector UMovementAbility::GetCameraPosition(FMoveState current)
 {
 	return FVector::UpVector;
 }
 
-float UMovementAbility::GetCameraTilt(FMoveState current)
+float UMovementAbility::GetCameraTilt()
 {
 	return 0.0f;
 }
 
-float UMovementAbility::GetCameraLook(FMoveState current)
+float UMovementAbility::GetCameraLook()
 {
-	return 0.0f;
+	return GetOwner()->GetActorForwardVector().Z;
 }
 
 USoundBase* UMovementAbility::UpdateAudio()

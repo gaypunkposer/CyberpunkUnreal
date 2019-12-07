@@ -65,6 +65,7 @@ FVector UWallrunAbility::GetVelocity(FMoveState current, FMoveState previous)
 	float negateStickDeg = FVector::DotProduct(current.Velocity, -WallNormal);
 
 	FVector targetVelocity = current.LateralVelocity * Speed;
+	targetVelocity.Z = -current.Velocity.Z;
 
 	if (current.Jump)
 	{
@@ -97,4 +98,24 @@ FVector UWallrunAbility::GetVelocity(FMoveState current, FMoveState previous)
 	}
 
 	return targetVelocity;
+}
+
+float UWallrunAbility::GetCameraTilt()
+{
+	FRotator target = UKismetMathLibrary::FindLookAtRotation(GetOwner()->GetActorRotation().Vector(), WallNormal);
+	
+	float xTarget = target.Vector().X;
+	xTarget = (xTarget > 180) ? xTarget - 360 : xTarget;
+	xTarget = FMath::Clamp(xTarget, -15.f, 15.f);
+
+	return xTarget;
+}
+
+float UWallrunAbility::GetCameraLook()
+{
+	FVector camRotTarget = FVector::CrossProduct(WallNormal, GetOwner()->GetActorForwardVector());
+	camRotTarget = FVector::CrossProduct(WallNormal, camRotTarget);
+	FRotator forward = UKismetMathLibrary::FindLookAtRotation(-camRotTarget, GetOwner()->GetActorUpVector());
+
+	return forward.Euler().Z;
 }

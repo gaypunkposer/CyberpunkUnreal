@@ -8,6 +8,7 @@
 UAdvancedPawnMovement::UAdvancedPawnMovement()
 {
 	GroundCheckShape = FCollisionShape::MakeCapsule(55.f, 96.f);
+	CameraRotTime = 0.25f;
 }
 
 void UAdvancedPawnMovement::BeginPlay()
@@ -15,6 +16,7 @@ void UAdvancedPawnMovement::BeginPlay()
 	Super::BeginPlay();
 	RefreshComponents();
 	PreviousMoveState = UpdateMoveState(0.f);
+	PlayerCapsule = Cast<AMovementPawn>(GetOwner())->CapsuleCollider;
 }
 
 void UAdvancedPawnMovement::RefreshComponents()
@@ -54,6 +56,9 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 
 	//DrawDebugCapsule(GetWorld(), GetActorLocation(), GroundCheckShape.GetCapsuleHalfHeight(), GroundCheckShape.GetCapsuleRadius(), GetOwner()->GetActorQuat(), FColor::Purple, false, 1.f);
 	Velocity += ability->GetVelocity(CurrentMoveState, PreviousMoveState);
+
+	ability->UpdateCollider(PlayerCapsule);
+	UpdateCamera(ability, DeltaTime);
 
 	if (!Velocity.IsNearlyZero())
 	{
@@ -95,4 +100,12 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 	state.GroundNormal = outHit.Normal;
 
 	return state;
+}
+
+void UAdvancedPawnMovement::UpdateCamera(UMovementAbility* ability, float DeltaTime)
+{
+	FVector rotTarget = GetOwner()->GetActorRotation().Vector();
+
+	FRotator finalRot = FMath::Lerp(GetOwner()->GetActorRotation(), FRotator(ability->GetCameraTilt() , 0, ability->GetCameraLook()), DeltaTime / CameraRotTime);
+	GetOwner()->SetActorRotation(finalRot);
 }
