@@ -7,16 +7,20 @@
 
 UAdvancedPawnMovement::UAdvancedPawnMovement()
 {
-	GroundCheckShape = FCollisionShape::MakeCapsule(55.f, 96.f);
+	GroundCheckShape = FCollisionShape::MakeCapsule(50.f, 96.f);
 	CameraRotTime = 0.25f;
 }
 
 void UAdvancedPawnMovement::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Parent = Cast<AMovementPawn>(GetOwner());
+	PlayerCapsule = Parent->CapsuleCollider;
+	Viewmodel = Parent->BodyMesh;
+
 	RefreshComponents();
 	PreviousMoveState = UpdateMoveState(0.f);
-	PlayerCapsule = Cast<AMovementPawn>(GetOwner())->CapsuleCollider;
 }
 
 void UAdvancedPawnMovement::RefreshComponents()
@@ -49,6 +53,7 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 
 	if (ability == nullptr)
 	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to determine movement state. This shouldn't happen."));
 		return;
 	}
 
@@ -58,6 +63,7 @@ void UAdvancedPawnMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 	Velocity += ability->GetVelocity(CurrentMoveState, PreviousMoveState);
 
 	ability->UpdateCollider(PlayerCapsule);
+	ability->UpdateViewmodel(Viewmodel);
 	UpdateCamera(ability, DeltaTime);
 
 	if (!Velocity.IsNearlyZero())
@@ -81,11 +87,9 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 
 	state.DeltaTime = DeltaTime;
 
-	AMovementPawn* parent = Cast<AMovementPawn>(GetOwner());
-
-	state.CrouchSlide = parent->GetCrouchPressed();
-	state.Jump = parent->ConsumeJump();
-	state.Sprint = parent->GetSprintPressed();
+	state.CrouchSlide = Parent->GetCrouchPressed();
+	state.Jump = Parent->ConsumeJump();
+	state.Sprint = Parent->GetSprintPressed();
 	state.DirectionalInput = ConsumeInputVector().GetClampedToMaxSize(1.0f);
 
 	state.Velocity = Velocity;
@@ -103,9 +107,24 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 }
 
 void UAdvancedPawnMovement::UpdateCamera(UMovementAbility* ability, float DeltaTime)
-{
-	FVector rotTarget = GetOwner()->GetActorRotation().Vector();
+{	
+	float currentTilt = Parent->GetControlRotation().Roll;
+	currentTilt = (currentTilt > 180) ? currentTilt - 360 : currentTilt;
 
-	FRotator finalRot = FMath::Lerp(GetOwner()->GetActorRotation(), FRotator(ability->GetCameraTilt() , 0, ability->GetCameraLook()), DeltaTime / CameraRotTime);
-	GetOwner()->SetActorRotation(finalRot);
+	float tiltTarget = ability->GetCameraTilt();
+
+	if (FMath::Abs(tiltTarget) < 1)
+	{
+		Parent->AddControllerRollInput(-currentTilt * DeltaTime / CameraRotTime);
+	}
+	else 
+	{
+		Parent->AddControllerRollInput((tiltTarget - currentTilt) * DeltaTime / CameraRotTime);
+	}
+
+	float lookDegree = ability->GetCameraLook() - Parent->GetActorRotation().Yaw;
+	UE_LOG(LogTemp, Warning, TEXT("Camera Tilt Result: %f"), tiltTarget);
+	
+
+	Parent->AddControllerYawInput(lookDegree * DeltaTime);
 }

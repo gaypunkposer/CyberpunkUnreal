@@ -29,3 +29,8 @@ bool UCrouchAbility::CrouchTouchingRoof()
 		GetOwner()->GetActorLocation() + GetOwner()->GetActorUpVector() * 48.f,
 		GetOwner()->GetActorQuat(), ECollisionChannel::ECC_WorldStatic, shape, collParam);
 }
+
+void UCrouchAbility::UpdateViewmodel(USkeletalMeshComponent* Mesh)
+{
+	Mesh->SetRelativeLocation(FVector(0, 0, -60.f));
+}

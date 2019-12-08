@@ -14,12 +14,14 @@ class CYBERPUNKUNREAL_API UAdvancedPawnMovement : public UPawnMovementComponent
 
 	FCollisionShape GroundCheckShape;
 	UCapsuleComponent* PlayerCapsule;
+	USkeletalMeshComponent* Viewmodel;
+	AMovementPawn* Parent;
 
 	void UpdateCamera(UMovementAbility* Ability, float DeltaTime);
 public:
 	UAdvancedPawnMovement();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float CameraRotTime;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay)

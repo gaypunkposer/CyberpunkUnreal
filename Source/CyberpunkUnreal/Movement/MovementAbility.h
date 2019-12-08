@@ -46,12 +46,5 @@ public:
     virtual float GetCameraTilt();
     virtual float GetCameraLook();
     virtual USoundBase* UpdateAudio();
-    
-    /*
-     * Need to determine the return type of these
-     *
-     * 
-     * virtual void UpdateViewmodel();
-     */
-    
+	virtual void UpdateViewmodel(USkeletalMeshComponent* Mesh);
 };

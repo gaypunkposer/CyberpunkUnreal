@@ -15,6 +15,7 @@ class CYBERPUNKUNREAL_API UWallrunAbility : public UMovementAbility
 
 	bool PreviouslyEscaping;
 	bool Leave;
+	bool Right;
 	float EnterVelocity;
 	float EnterDegree;
 	FVector WallNormal;

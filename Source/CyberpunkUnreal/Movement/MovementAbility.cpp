@@ -2,6 +2,7 @@
 
 
 #include "MovementAbility.h"
+#include "Movement/MovementPawn.h"
 
 // Sets default values for this component's properties
 UMovementAbility::UMovementAbility()
@@ -36,15 +37,20 @@ FVector UMovementAbility::GetCameraPosition(FMoveState current)
 
 float UMovementAbility::GetCameraTilt()
 {
-	return 0.0f;
+	return 0;
 }
 
 float UMovementAbility::GetCameraLook()
 {
-	return GetOwner()->GetActorForwardVector().Z;
+	return GetOwner()->GetActorRotation().Yaw;
 }
 
 USoundBase* UMovementAbility::UpdateAudio()
 {
 	return MoveSound;
+}
+
+void UMovementAbility::UpdateViewmodel(USkeletalMeshComponent* Mesh)
+{
+	Mesh->SetRelativeLocation(FVector(0, 0, -67.5f));
 }

@@ -4,7 +4,7 @@
 #include "WallrunAbility.h"
 #include "LedgeGrabAbility.h"
 
-UWallrunAbility::UWallrunAbility() 
+UWallrunAbility::UWallrunAbility()
 {
 	Priority = 7;
 }
@@ -23,7 +23,7 @@ bool UWallrunAbility::ShouldUseThisAbility(FMoveState current, FMoveState previo
 		current.Velocity.Size() > MinEnterVelocity))
 	{
 		Leave = false;
-		
+
 		return !previous.Ability->IsA<ULedgeGrabAbility>();
 	}
 
@@ -41,21 +41,26 @@ bool UWallrunAbility::PreCheck(FMoveState current)
 bool UWallrunAbility::MainCheck(FMoveState current, FMoveState previous)
 {
 	FHitResult result;
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(25, 10, 25));
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
 	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 60.f, FColor::Green, false, .1f);
 	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 60.f, FColor::Red, false, .1f);
-	if (GetWorld()->LineTraceSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 57.5f, ECC_WorldStatic, collParam)
-		|| GetWorld()->LineTraceSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 57.5f, ECC_WorldStatic, collParam))
+	if (GetWorld()->SweepSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 57.5f, GetOwner()->GetActorQuat(), ECC_WorldStatic, shape, collParam))
 	{
 		WallNormal = result.Normal;
-		UE_LOG(LogTemp, Warning, TEXT("Wallrun check succeeded, %s"), *result.Actor->GetName());
+		Right = false;
 		return true;
 	}
-	else 
+	else if (GetWorld()->SweepSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 57.5f, GetOwner()->GetActorQuat(), ECC_WorldStatic, shape, collParam))
 	{
-			WallNormal = FVector::ZeroVector;
-
+		WallNormal = result.Normal;
+		Right = true;
+		return true;
+	}
+	else
+	{
+		WallNormal = FVector::ZeroVector;
 		return false;
 	}
 }
@@ -79,7 +84,7 @@ FVector UWallrunAbility::GetVelocity(FMoveState current, FMoveState previous)
 		targetVelocity.Z = 0;
 		targetVelocity += 1.25f * negateStickDeg * WallNormal;
 	}
-	else 
+	else
 	{
 		if (!previous.Ability->IsA<UWallrunAbility>())
 		{
@@ -102,20 +107,13 @@ FVector UWallrunAbility::GetVelocity(FMoveState current, FMoveState previous)
 
 float UWallrunAbility::GetCameraTilt()
 {
-	FRotator target = UKismetMathLibrary::FindLookAtRotation(GetOwner()->GetActorRotation().Vector(), WallNormal);
-	
-	float xTarget = target.Vector().X;
-	xTarget = (xTarget > 180) ? xTarget - 360 : xTarget;
-	xTarget = FMath::Clamp(xTarget, -15.f, 15.f);
-
-	return xTarget;
+	return (Right) ? -15 : 15;
 }
 
 float UWallrunAbility::GetCameraLook()
 {
 	FVector camRotTarget = FVector::CrossProduct(WallNormal, GetOwner()->GetActorForwardVector());
 	camRotTarget = FVector::CrossProduct(WallNormal, camRotTarget);
-	FRotator forward = UKismetMathLibrary::FindLookAtRotation(-camRotTarget, GetOwner()->GetActorUpVector());
-
+	FRotator forward = UKismetMathLibrary::MakeRotFromXZ(-camRotTarget, FVector::UpVector);
 	return forward.Euler().Z;
 }

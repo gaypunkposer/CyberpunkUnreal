@@ -36,4 +36,5 @@ public:
 	bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
 	void UpdateCollider(UCapsuleComponent* Capsule) override;
 	FVector GetVelocity(FMoveState current, FMoveState previous) override;
+	void UpdateViewmodel(USkeletalMeshComponent* Mesh) override;
 };

@@ -15,6 +15,8 @@ class CYBERPUNKUNREAL_API UCrouchAbility : public UMovementAbility
 
 public:
 	UCrouchAbility();
+	 
 	bool ShouldUseThisAbility(FMoveState current, FMoveState previous) override;
 	void UpdateCollider(UCapsuleComponent* Capsule) override;
+	void UpdateViewmodel(USkeletalMeshComponent* Mesh) override;
 };

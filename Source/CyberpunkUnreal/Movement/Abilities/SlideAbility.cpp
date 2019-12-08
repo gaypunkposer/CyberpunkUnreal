@@ -62,3 +62,8 @@ void USlideAbility::UpdateCollider(UCapsuleComponent* Capsule)
 {
 	Capsule->SetCapsuleHalfHeight(48.f);
 }
+
+void USlideAbility::UpdateViewmodel(USkeletalMeshComponent* Mesh)
+{
+	Mesh->SetRelativeLocation(FVector(0, 0, -60.f));
+}

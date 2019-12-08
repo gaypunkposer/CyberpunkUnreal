@@ -58,6 +58,7 @@ void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMovementPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMovementPawn::MoveRight);
+
 	PlayerInputComponent->BindAxis("Turn", this, &AMovementPawn::Turn);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMovementPawn::LookUp);
 }
