@@ -2,11 +2,14 @@
 
 #pragma once
 
+#include "DlgDialogueParticipant.h"
+#include "Dialogue/DialogueData.h"
+
 #include "MovementBase.h"
 #include "MovementPawn.generated.h"
 
 UCLASS()
-class CYBERPUNKUNREAL_API AMovementPawn : public APawn
+class CYBERPUNKUNREAL_API AMovementPawn : public APawn, public IDlgDialogueParticipant
 {
 	GENERATED_BODY()
 
@@ -46,9 +49,24 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAdvancedPawnMovement* MovementComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
+	FDialogueData DialogueData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
+	FName DialogueParticipantName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
+	FText DialogueParticipantDisplayName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
+	UTexture2D* DialogueParticipantIcon;
+
 protected:
 	virtual void BeginPlay() override;
 	
+	UPROPERTY(BlueprintReadOnly)
+	class UDlgContext* DialogueContext = nullptr;
+
 	UInputComponent* Input;
 	bool CrouchPressed;
 	bool JumpPressed;
@@ -66,4 +84,27 @@ public:
 	inline bool GetCrouchPressed() { return CrouchPressed; };
 	bool ConsumeJump();
 	inline bool GetSprintPressed() { return SprintPressed; };
+
+	FName GetParticipantName_Implementation() const override { return DialogueParticipantName; }
+	FText GetParticipantDisplayName_Implementation(FName ActiveSpeaker) const override { return DialogueParticipantDisplayName; }
+	UTexture2D* GetParticipantIcon_Implementation(FName ActiveSpeaker, FName ActiveSpeakerState) const override { return DialogueParticipantIcon; }
+
+	bool ModifyIntValue_Implementation(const FName& ValueName, bool bDelta, int32 Value) override;
+	bool ModifyFloatValue_Implementation(const FName& ValueName, bool bDelta, float Value) override;
+	bool ModifyBoolValue_Implementation(const FName& ValueName, bool bValue) override;
+	bool ModifyNameValue_Implementation(const FName& ValueName, const FName& NameValue) override;
+
+	float GetFloatValue_Implementation(const FName& ValueName) const override;
+	int32 GetIntValue_Implementation(const FName& ValueName) const override;
+	bool GetBoolValue_Implementation(const FName& ValueName) const override;
+	FName GetNameValue_Implementation(const FName& ValueName) const override;
+
+	bool OnDialogueEvent_Implementation(const FName& EventName) override { return false; }
+	bool CheckCondition_Implementation(const FName& ConditionName) const override { return false; }
+
+	UFUNCTION(BlueprintCallable, Category = DlgSystem)
+	void StartDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant);
+
+	UFUNCTION(BlueprintCallable, Category = DlgSystem)
+	void SelectDialogueOption(int32 Index);
 };

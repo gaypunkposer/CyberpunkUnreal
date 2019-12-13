@@ -6,6 +6,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "CyberpunkUnreal/Movement/AdvancedPawnMovement.h"
+#include "CyberpunkUnreal/Dialogue/DialogueData.h"
+#include "DlgContext.h"
+#include "DlgManager.h"
 
 // Sets default values
 AMovementPawn::AMovementPawn()
@@ -100,3 +103,84 @@ bool AMovementPawn::ConsumeJump()
 	JumpPressed = false;
 	return retval;
 }
+
+bool AMovementPawn::ModifyIntValue_Implementation(const FName& ValueName, bool bDelta, int32 Value)
+{
+	if (!DialogueData.Integers.Contains(ValueName))
+		DialogueData.Integers.Add(ValueName, 0);
+
+	if (bDelta)
+		DialogueData.Integers[ValueName] += Value;
+	else
+		DialogueData.Integers[ValueName] = Value;
+
+	return true;
+}
+
+bool AMovementPawn::ModifyFloatValue_Implementation(const FName& ValueName, bool bDelta, float Value)
+{
+	if (!DialogueData.Floats.Contains(ValueName))
+		DialogueData.Floats.Add(ValueName, 0.0f);
+
+	if (bDelta)
+		DialogueData.Floats[ValueName] += Value;
+	else
+		DialogueData.Floats[ValueName] = Value;
+
+	return true;
+}
+
+bool AMovementPawn::ModifyBoolValue_Implementation(const FName& ValueName, bool bValue)
+{
+	if (bValue)
+		DialogueData.TrueBools.Add(ValueName);
+	else
+		DialogueData.TrueBools.Remove(ValueName);
+
+	return true;
+}
+
+bool AMovementPawn::ModifyNameValue_Implementation(const FName& ValueName, const FName& NameValue)
+{
+	if (DialogueData.Names.Contains(ValueName))
+		DialogueData.Names[ValueName] = NameValue;
+	else
+		DialogueData.Names.Add(ValueName, NameValue);
+
+	return true;
+}
+
+float AMovementPawn::GetFloatValue_Implementation(const FName& ValueName) const
+{
+	return DialogueData.Floats.Contains(ValueName) ? DialogueData.Floats[ValueName] : 0.0f;
+}
+
+int32 AMovementPawn::GetIntValue_Implementation(const FName& ValueName) const
+{
+	return DialogueData.Integers.Contains(ValueName) ? DialogueData.Integers[ValueName] : 0;
+}
+
+bool AMovementPawn::GetBoolValue_Implementation(const FName& ValueName) const
+{
+	return DialogueData.TrueBools.Contains(ValueName);
+}
+
+FName AMovementPawn::GetNameValue_Implementation(const FName& ValueName) const
+{
+	return DialogueData.Names.Contains(ValueName) ? DialogueData.Names[ValueName] : NAME_None;
+}
+
+void AMovementPawn::StartDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant)
+{
+	DialogueContext = UDlgManager::StartDialogue2(Dialogue, GetPawn(), OtherParticipant);
+}
+
+void AMovementPawn::SelectDialogueOption(int32 Index)
+{
+	if (DialogueContext == nullptr || Index < 0 || Index >= DialogueContext->GetOptionNum())
+		return;
+
+	if (!DialogueContext->ChooseChild(Index))
+		DialogueContext = nullptr;
+}
+
