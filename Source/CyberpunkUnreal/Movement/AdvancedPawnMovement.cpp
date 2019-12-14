@@ -123,8 +123,6 @@ void UAdvancedPawnMovement::UpdateCamera(UMovementAbility* ability, float DeltaT
 	}
 
 	float lookDegree = ability->GetCameraLook() - Parent->GetActorRotation().Yaw;
-	UE_LOG(LogTemp, Warning, TEXT("Camera Tilt Result: %f"), tiltTarget);
 	
-
 	Parent->AddControllerYawInput(lookDegree * DeltaTime);
 }

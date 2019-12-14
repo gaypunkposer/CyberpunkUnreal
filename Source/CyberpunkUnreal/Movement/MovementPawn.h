@@ -64,7 +64,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UDlgContext* DialogueContext = nullptr;
 
 	UInputComponent* Input;

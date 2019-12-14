@@ -1,0 +1,97 @@
+DlgVersion 7
+DlgName "TestDialogueScript"
+DlgGuid {  A -783772917 B 1295870698 C 2058578828 D -1575719987 }
+Node_Speech StartNode
+{
+	Text ""
+	SpeakerState "None"
+	bIsVirtualParent False
+	OwnerName "None"
+	bCheckChildrenOnEvaluation False
+	NodeData ""
+	VoiceSoundWave ""
+	VoiceDialogueWave ""
+	GenericData ""
+	Children { {  TargetIndex 0 Text "Next" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+}
+DlgParticipantClasses
+{
+	{  ParticipantName "Test" ParticipantClass "" }
+	{  ParticipantName "Vex" ParticipantClass "" }
+}
+Node Nodes
+{
+	// 0
+	Node_Speech 
+	{
+		Text "Yo here's a line of dialogue"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children
+		{
+			{  TargetIndex 1 Text "Wow, that's neat!" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True }
+			{  TargetIndex 2 Text "Fuck you!" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True }
+		}
+	}
+	// 1
+	Node_Speech 
+	{
+		Text "I know, right?"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children { {  TargetIndex 3 Text "Next" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+	}
+	// 2
+	Node_Speech 
+	{
+		Text "Well fuck you too then!"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children { {  TargetIndex 3 Text "Next" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+	}
+	// 3
+	Node_Speech 
+	{
+		Text "End dialogue
+"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children { {  TargetIndex 4 Text "Finish" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+	}
+	// 4
+	Node_End 
+	{
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+	}
+	// 5
+	Node_SpeechSequence 
+	{
+		OwnerName "Vex"
+		bCheckChildrenOnEvaluation False
+	}
+}

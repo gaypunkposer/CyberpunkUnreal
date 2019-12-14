@@ -7,6 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "CyberpunkUnreal/Movement/AdvancedPawnMovement.h"
 #include "CyberpunkUnreal/Dialogue/DialogueData.h"
+#include "Actions/PawnAction.h"
+#include "Kismet/GameplayStatics.h"
 #include "DlgContext.h"
 #include "DlgManager.h"
 
@@ -172,7 +174,9 @@ FName AMovementPawn::GetNameValue_Implementation(const FName& ValueName) const
 
 void AMovementPawn::StartDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant)
 {
-	DialogueContext = UDlgManager::StartDialogue2(Dialogue, GetPawn(), OtherParticipant);
+	APawn* pawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	DialogueContext = UDlgManager::StartDialogue2(Dialogue, pawn, OtherParticipant);
+	UE_LOG(LogTemp, Warning, TEXT("Ran dialogue"));
 }
 
 void AMovementPawn::SelectDialogueOption(int32 Index)
