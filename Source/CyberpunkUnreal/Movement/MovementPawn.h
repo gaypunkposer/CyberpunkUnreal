@@ -59,7 +59,7 @@ public:
 	FText DialogueParticipantDisplayName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
-	UTexture2D* DialogueParticipantIcon;
+	class UTexture2D* DialogueParticipantIcon;
 
 protected:
 	virtual void BeginPlay() override;
@@ -67,7 +67,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UDlgContext* DialogueContext = nullptr;
 
-	UInputComponent* Input;
 	bool CrouchPressed;
 	bool JumpPressed;
 	bool SprintPressed;
@@ -103,7 +102,7 @@ public:
 	bool CheckCondition_Implementation(const FName& ConditionName) const override { return false; }
 
 	UFUNCTION(BlueprintCallable, Category = DlgSystem)
-	void StartDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant);
+	void StartInterruptingDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant);
 
 	UFUNCTION(BlueprintCallable, Category = DlgSystem)
 	void SelectDialogueOption(int32 Index);

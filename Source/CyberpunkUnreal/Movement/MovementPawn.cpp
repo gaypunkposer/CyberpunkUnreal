@@ -171,20 +171,3 @@ FName AMovementPawn::GetNameValue_Implementation(const FName& ValueName) const
 {
 	return DialogueData.Names.Contains(ValueName) ? DialogueData.Names[ValueName] : NAME_None;
 }
-
-void AMovementPawn::StartDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant)
-{
-	APawn* pawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	DialogueContext = UDlgManager::StartDialogue2(Dialogue, pawn, OtherParticipant);
-	UE_LOG(LogTemp, Warning, TEXT("Ran dialogue"));
-}
-
-void AMovementPawn::SelectDialogueOption(int32 Index)
-{
-	if (DialogueContext == nullptr || Index < 0 || Index >= DialogueContext->GetOptionNum())
-		return;
-
-	if (!DialogueContext->ChooseChild(Index))
-		DialogueContext = nullptr;
-}
-

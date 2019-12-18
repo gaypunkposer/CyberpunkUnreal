@@ -21,7 +21,7 @@ void UCrouchAbility::UpdateCollider(UCapsuleComponent* Capsule)
 bool UCrouchAbility::CrouchTouchingRoof()
 {
 	FHitResult outHit;
-	FCollisionShape shape = FCollisionShape::MakeCapsule(55.f, 48.f);
+	FCollisionShape shape = FCollisionShape::MakeCapsule(45.f, 48.f);
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
 

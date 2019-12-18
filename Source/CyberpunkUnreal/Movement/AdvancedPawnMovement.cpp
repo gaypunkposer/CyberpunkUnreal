@@ -99,7 +99,7 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
 	state.Grounded = GetWorld()->SweepSingleByChannel(outHit, GetOwner()->GetActorLocation(),
-		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector() * 5.f,
+		GetOwner()->GetActorLocation() - GetOwner()->GetActorUpVector(),
 		GetOwner()->GetActorQuat(), ECollisionChannel::ECC_WorldStatic, GroundCheckShape, collParam);
 	state.GroundNormal = outHit.Normal;
 
