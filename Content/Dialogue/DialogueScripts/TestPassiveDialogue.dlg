@@ -1,0 +1,79 @@
+DlgVersion 7
+DlgName "TestPassiveDialogue"
+DlgGuid {  A -507282131 B 1278162290 C 1543612560 D 242149874 }
+Node_Speech StartNode
+{
+	Text ""
+	SpeakerState "None"
+	bIsVirtualParent False
+	OwnerName "None"
+	bCheckChildrenOnEvaluation False
+	NodeData ""
+	VoiceSoundWave ""
+	VoiceDialogueWave ""
+	GenericData ""
+	Children { {  TargetIndex 0 Text "Next" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+}
+DlgParticipantClasses
+{
+	{  ParticipantName "Test" ParticipantClass "" }
+	{  ParticipantName "Vex" ParticipantClass "" }
+}
+Node Nodes
+{
+	// 0
+	Node_Speech 
+	{
+		Text "Yo here's a line of dialogue"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children { {  TargetIndex 1 Text "Next" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+	}
+	// 1
+	Node_Speech 
+	{
+		Text "Here's another one"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children { {  TargetIndex 2 Text "Next" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+	}
+	// 2
+	Node_Speech 
+	{
+		Text "End dialogue
+"
+		SpeakerState "None"
+		bIsVirtualParent False
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+		NodeData ""
+		VoiceSoundWave ""
+		VoiceDialogueWave ""
+		GenericData ""
+		Children { {  TargetIndex 3 Text "Finish" SpeakerState "None" bIncludeInAllOptionListIfUnsatisfied True } }
+	}
+	// 3
+	Node_End 
+	{
+		OwnerName "Test"
+		bCheckChildrenOnEvaluation False
+	}
+	// 4
+	Node_SpeechSequence 
+	{
+		OwnerName "Vex"
+		bCheckChildrenOnEvaluation False
+	}
+}

@@ -89,6 +89,7 @@ FMoveState UAdvancedPawnMovement::UpdateMoveState(float DeltaTime)
 
 	state.CrouchSlide = Parent->GetCrouchPressed();
 	state.Jump = Parent->ConsumeJump();
+	state.JumpHeld = Parent->GetJumpHeld();
 	state.Sprint = Parent->GetSprintPressed();
 	state.DirectionalInput = ConsumeInputVector().GetClampedToMaxSize(1.0f);
 

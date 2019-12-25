@@ -36,6 +36,9 @@ struct CYBERPUNKUNREAL_API FMoveState
 		bool Jump;
 
 	UPROPERTY(BlueprintReadOnly)
+		bool JumpHeld;
+
+	UPROPERTY(BlueprintReadOnly)
 		bool Grounded;
 
 	UPROPERTY(BlueprintReadOnly)

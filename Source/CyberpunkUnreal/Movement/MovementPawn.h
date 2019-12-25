@@ -13,8 +13,8 @@ class CYBERPUNKUNREAL_API AMovementPawn : public APawn, public IDlgDialogueParti
 {
 	GENERATED_BODY()
 
-	inline void OnBeginJump() { JumpPressed = true; };
-	inline void OnEndJump() { JumpPressed = false; };
+	inline void OnBeginJump() { JumpPressed = true; JumpHeld = true; };
+	inline void OnEndJump() { JumpPressed = false; JumpHeld = false; };
 
 	inline void OnBeginCrouch() { CrouchPressed = true; };
 	inline void OnEndCrouch() { CrouchPressed = false; };
@@ -63,10 +63,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UDlgContext* DialogueContext = nullptr;
 
+	bool JumpHeld;
 	bool CrouchPressed;
 	bool JumpPressed;
 	bool SprintPressed;
@@ -81,6 +79,7 @@ public:
 	UAdvancedPawnMovement* GetAdvancedMovementComponent();
 
 	inline bool GetCrouchPressed() { return CrouchPressed; };
+	inline bool GetJumpHeld() { return JumpHeld; };
 	bool ConsumeJump();
 	inline bool GetSprintPressed() { return SprintPressed; };
 
@@ -100,10 +99,4 @@ public:
 
 	bool OnDialogueEvent_Implementation(const FName& EventName) override { return false; }
 	bool CheckCondition_Implementation(const FName& ConditionName) const override { return false; }
-
-	UFUNCTION(BlueprintCallable, Category = DlgSystem)
-	void StartInterruptingDialogue(class UDlgDialogue* Dialogue, UObject* OtherParticipant);
-
-	UFUNCTION(BlueprintCallable, Category = DlgSystem)
-	void SelectDialogueOption(int32 Index);
 };

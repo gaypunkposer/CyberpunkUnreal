@@ -37,7 +37,7 @@ bool ULedgeGrabAbility::ShouldUseThisAbility(FMoveState current, FMoveState prev
 
 	if ((previous.Ability->IsA<UJumpAbility>() || previous.Ability->IsA<UAirAbility>()) && MainCheck())
 	{
-		if (current.Jump) {
+		if (current.JumpHeld) {
 			PullingUp = true;
 			return true;
 		}
