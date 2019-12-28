@@ -5,10 +5,12 @@
 #include "Classes/Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "CyberpunkUnreal/Movement/AdvancedPawnMovement.h"
-#include "CyberpunkUnreal/Dialogue/DialogueData.h"
+#include "Movement/AdvancedPawnMovement.h"
+#include "UI/DialogueWidget.h"
 #include "Actions/PawnAction.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerAnimInstance.h"
+#include "Movement/MovementAbility.h"
 #include "DlgContext.h"
 #include "DlgManager.h"
 
@@ -30,13 +32,13 @@ AMovementPawn::AMovementPawn()
 
 	MovementComponent = CreateDefaultSubobject<UAdvancedPawnMovement>(TEXT("PawnMovement"));
 	MovementComponent->UpdatedComponent = RootComponent;
-	
 }
 
 // Called when the game starts or when spawned
 void AMovementPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 
@@ -45,6 +47,17 @@ void AMovementPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CapsuleCollider->SetPhysicsLinearVelocity(MovementComponent->Velocity);
+	UpdateMovementAnimations();
+}
+
+void AMovementPawn::UpdateMovementAnimations()
+{
+	if (!BodyMesh) return;
+	UPlayerAnimInstance* anim = Cast<UPlayerAnimInstance>(BodyMesh->GetAnimInstance());
+
+	if (!anim) return;
+	anim->MoveState = MovementComponent->CurrentMoveState.Ability->Priority;
+	anim->Speed = MovementComponent->CurrentMoveState.LateralVelocity.Size();
 }
 
 void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

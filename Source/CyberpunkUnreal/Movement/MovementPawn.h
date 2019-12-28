@@ -3,7 +3,7 @@
 #pragma once
 
 #include "DlgDialogueParticipant.h"
-#include "Dialogue/DialogueData.h"
+#include "UI/DialogueWidget.h"
 
 #include "MovementBase.h"
 #include "MovementPawn.generated.h"
@@ -27,6 +27,8 @@ class CYBERPUNKUNREAL_API AMovementPawn : public APawn, public IDlgDialogueParti
 	void Turn(float Degree);
 	void LookUp(float Degree);
 
+	void UpdateMovementAnimations();
+
 public:
 	// Sets default values for this pawn's properties
 	AMovementPawn();
@@ -43,14 +45,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Mesh)
     class USkeletalMeshComponent* BodyMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	int TurnRate = 25;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Movement)
 	class UAdvancedPawnMovement* MovementComponent;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	//class ;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
-	FDialogueData DialogueData;
+	struct FDialogueData DialogueData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
 	FName DialogueParticipantName;
@@ -60,6 +65,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DlgData, meta = (AllowPrivateAccess = "true"))
 	class UTexture2D* DialogueParticipantIcon;
+
+
 
 protected:
 	virtual void BeginPlay() override;

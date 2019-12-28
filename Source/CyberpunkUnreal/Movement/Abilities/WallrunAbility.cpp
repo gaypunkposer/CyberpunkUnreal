@@ -44,8 +44,6 @@ bool UWallrunAbility::MainCheck(FMoveState current, FMoveState previous)
 	FCollisionShape shape = FCollisionShape::MakeBox(FVector(25, 10, 25));
 	FCollisionQueryParams collParam = FCollisionQueryParams();
 	collParam.AddIgnoredActor(GetOwner());
-	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 60.f, FColor::Green, false, .1f);
-	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + GetOwner()->GetActorRightVector() * 60.f, FColor::Red, false, .1f);
 	if (GetWorld()->SweepSingleByChannel(result, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() - GetOwner()->GetActorRightVector() * 57.5f, GetOwner()->GetActorQuat(), ECC_WorldStatic, shape, collParam))
 	{
 		WallNormal = result.Normal;
