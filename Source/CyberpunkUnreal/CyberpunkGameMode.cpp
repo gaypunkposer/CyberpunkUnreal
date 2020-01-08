@@ -94,6 +94,4 @@ void ACyberpunkGameMode::UpdateDialogue()
 	if (!DialogueContext) return;
 	showingOptions = false;
 	HUD->UpdateDialogue(DialogueContext->GetActiveNodeParticipantName(), DialogueContext->GetActiveNodeText());
-	UE_LOG(LogTemp, Warning, TEXT("Active dialogue speaker: %s"), *DialogueContext->GetActiveNodeParticipantName().ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Active dialogue speech: %s"), *DialogueContext->GetActiveNodeText().ToString());
 }

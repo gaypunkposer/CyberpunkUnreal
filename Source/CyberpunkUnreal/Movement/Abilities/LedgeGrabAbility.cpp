@@ -77,7 +77,7 @@ bool ULedgeGrabAbility::FrontCheck()
 	FCollisionQueryParams params = FCollisionQueryParams();
 	params.AddIgnoredActor(GetOwner());
 
-	FCollisionShape shape = FCollisionShape::MakeBox(FVector(25.f, 50.f, 25.f));
+	FCollisionShape shape = FCollisionShape::MakeBox(FVector(50.f, 50.f, 50.f));
 
 	bool result = GetWorld()->SweepSingleByChannel(hitResult,
 		GetOwner()->GetActorLocation() + FVector::UpVector * 25.f,
