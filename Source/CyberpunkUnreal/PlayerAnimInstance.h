@@ -14,5 +14,8 @@ public:
 	int MoveState;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Speed;
+	FVector Velocity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TurnRate;
 };

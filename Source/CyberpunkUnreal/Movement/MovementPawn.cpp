@@ -7,7 +7,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Movement/AdvancedPawnMovement.h"
 #include "UI/DialogueWidget.h"
-#include "Actions/PawnAction.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerAnimInstance.h"
 #include "Movement/MovementAbility.h"
@@ -20,16 +19,28 @@ AMovementPawn::AMovementPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	this->bUseControllerRotationYaw = true;
+	this->DialogueParticipantName = FName(TEXT("Vex"));
+
 	CapsuleCollider = CreateDefaultSubobject<UCapsuleComponent>(TEXT("FirstPersonCollision"));
 	CapsuleCollider->InitCapsuleSize(55.f, 96.0f);
+	CapsuleCollider->SetEnableGravity(false);
+	CapsuleCollider->SetCollisionProfileName(FName(TEXT("Pawn")));
+	CapsuleCollider->SetGenerateOverlapEvents(true);
+	CapsuleCollider->bDynamicObstacle = true;
+	CapsuleCollider->CanCharacterStepUpOn = ECB_No;
 
 	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	BodyMesh->SetupAttachment(CapsuleCollider);
+	BodyMesh->SetRelativeLocation(FVector(0, 0, -90.f));
+	BodyMesh->SetRelativeRotation(FRotator(0, -90.f, 0));
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-    CameraComponent->bUsePawnControlRotation = true;
-	CameraComponent->SetupAttachment(BodyMesh, TEXT("face"));
-
+	CameraComponent->SetupAttachment(BodyMesh, FName(TEXT("HeadSocket")));
+	CameraComponent->bUsePawnControlRotation = true;
+	CameraComponent->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
+	CameraComponent->SetRelativeLocation(FVector(0, -10.f, 15.f));
+	
 	MovementComponent = CreateDefaultSubobject<UAdvancedPawnMovement>(TEXT("PawnMovement"));
 	MovementComponent->UpdatedComponent = RootComponent;
 }
@@ -38,9 +49,7 @@ AMovementPawn::AMovementPawn()
 void AMovementPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
-
 
 // Called every frame
 void AMovementPawn::Tick(float DeltaTime)
@@ -48,6 +57,7 @@ void AMovementPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	CapsuleCollider->SetPhysicsLinearVelocity(MovementComponent->Velocity);
 	UpdateMovementAnimations();
+	//CameraComponent->SetRelativeLocation(FVector::ZeroVector);
 }
 
 void AMovementPawn::UpdateMovementAnimations()
@@ -57,7 +67,9 @@ void AMovementPawn::UpdateMovementAnimations()
 
 	if (!anim) return;
 	anim->MoveState = MovementComponent->CurrentMoveState.Ability->Priority;
-	anim->Speed = MovementComponent->CurrentMoveState.LateralVelocity.Size();
+	anim->Velocity = moveDir;
+	moveDir = FVector::ZeroVector;
+	turnAmount -= turnAmount;
 }
 
 void AMovementPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -91,6 +103,12 @@ void AMovementPawn::MoveForward(float Degree)
 	if (MovementComponent && MovementComponent->UpdatedComponent == RootComponent)
 	{
 		MovementComponent->AddInputVector(GetActorForwardVector() * Degree);
+		
+	}
+
+	if (Degree > 0.001f || Degree < -0.001f)
+	{
+		moveDir += FVector::ForwardVector * Degree;
 	}
 }
 
@@ -99,11 +117,18 @@ void AMovementPawn::MoveRight(float Degree)
 	if (MovementComponent && MovementComponent->UpdatedComponent == RootComponent)
 	{
 		MovementComponent->AddInputVector(GetActorRightVector() * Degree);
+		
+	}
+
+	if (Degree > 0.001f || Degree < -0.001f)
+	{
+		moveDir += FVector::RightVector * Degree;
 	}
 }
 
 void AMovementPawn::Turn(float Degree) 
 {
+	turnAmount += Degree;
 	AddControllerYawInput(Degree * TurnRate * GetWorld()->GetDeltaSeconds());
 }
 

@@ -32,5 +32,5 @@ bool UCrouchAbility::CrouchTouchingRoof()
 
 void UCrouchAbility::UpdateViewmodel(USkeletalMeshComponent* Mesh)
 {
-	Mesh->SetRelativeLocation(FVector(0, 0, -60.f));
+	//Mesh->SetRelativeLocation(FVector(0, 0, ));
 }

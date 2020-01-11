@@ -28,6 +28,8 @@ class CYBERPUNKUNREAL_API AMovementPawn : public APawn, public IDlgDialogueParti
 	void LookUp(float Degree);
 
 	void UpdateMovementAnimations();
+	float turnAmount;
+	FVector moveDir;
 
 public:
 	// Sets default values for this pawn's properties
