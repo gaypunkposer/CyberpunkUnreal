@@ -19,7 +19,7 @@ FVector UAirAbility::GetVelocity(FMoveState current, FMoveState previous)
 
 	if (previous.Grounded && previous.Ability != nullptr)
 	{
-		targetVelocity.Z += previous.Ability->Stickiness;
+		//targetVelocity.Z += previous.Ability->Stickiness;
 	}
 
 	targetVelocity -= current.LateralVelocity * AirResistance;

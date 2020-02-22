@@ -38,7 +38,7 @@ FVector USlideAbility::GetVelocity(FMoveState current, FMoveState previous)
 	if (!PreviouslySliding && BoostTime <= 0)
 	{
 		FVector addVelocity = FVector::VectorPlaneProject(current.Velocity, current.GroundNormal);
-		//addVelocity.Z = -current.Velocity.Z;
+		addVelocity.Z = -current.Velocity.Z;
 		addVelocity *= Speed;
 		addVelocity += targetVelocity;
 
